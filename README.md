@@ -31,7 +31,7 @@ This will install ffmpeg and add it to your PATH automatically.
 Open a terminal in the project folder and run:
 
 ```
-pip install pydub
+pip install -r requirements.txt
 ```
 
 ## Usage
