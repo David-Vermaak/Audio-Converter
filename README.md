@@ -37,7 +37,7 @@ pip install pydub
 ## Usage
 1. Run the app:
    ```
-   python "#Python audio converter.py"
+   python "main.py"
    ```
 2. Use the GUI to:
    - Select the input file type ("Convert from")
@@ -46,7 +46,3 @@ pip install pydub
    - Select output folder
    - Click **Convert**
 3. Watch the progress bar and terminal log for results.
-
----
-
-**Note:** If you add new formats, make sure ffmpeg supports them. 
