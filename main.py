@@ -2,6 +2,7 @@
 
 import tkinter as tk
 from tkinter import filedialog, messagebox, ttk
+import sv_ttk
 from pydub import AudioSegment
 import os
 
@@ -23,7 +24,7 @@ class AudioConverterApp:
         # File selection
         file_frame = tk.Frame(self.root)
         file_frame.pack(padx=10, pady=5, fill='x')
-        tk.Button(file_frame, text='Select Audio Files', command=self.select_files).pack(side='left')
+        ttk.Button(file_frame, text='Select Audio Files', command=self.select_files).pack(side='left')
         self.file_label = tk.Label(file_frame, text='No files selected')
         self.file_label.pack(side='left', padx=10)
 
@@ -44,12 +45,12 @@ class AudioConverterApp:
         # Output folder
         out_frame = tk.Frame(self.root)
         out_frame.pack(padx=10, pady=5, fill='x')
-        tk.Button(out_frame, text='Select Output Folder', command=self.select_output_folder).pack(side='left')
+        ttk.Button(out_frame, text='Select Output Folder', command=self.select_output_folder).pack(side='left')
         self.out_label = tk.Label(out_frame, text='No folder selected')
         self.out_label.pack(side='left', padx=10)
 
         # Convert button
-        tk.Button(self.root, text='Convert', command=self.start_conversion_thread).pack(pady=10)
+        ttk.Button(self.root, text='Convert', style="Accent.TButton", command=self.start_conversion_thread).pack(pady=10)
 
         # Progress bar
         self.progress = ttk.Progressbar(self.root, orient='horizontal', length=300, mode='determinate')
@@ -60,13 +61,14 @@ class AudioConverterApp:
         terminal_frame.pack(padx=10, pady=5, fill='both', expand=True)
         self.terminal = tk.Text(terminal_frame, height=10, state='disabled', bg='black', fg='lime', font=('Consolas', 10))
         self.terminal.pack(side='left', fill='both', expand=True)
-        scrollbar = tk.Scrollbar(terminal_frame, command=self.terminal.yview)
+        scrollbar = ttk.Scrollbar(terminal_frame, command=self.terminal.yview)
         scrollbar.pack(side='right', fill='y')
         self.terminal['yscrollcommand'] = scrollbar.set
 
         # Status
-        self.status = tk.Label(self.root, text='', fg='blue')
+        self.status = tk.Label(self.root, text='', fg='#57C8FF', font=("Arial", 15) )
         self.status.pack(pady=5)
+        self.status.config(text='Waiting...', height=6)
 
     def select_files(self):
         # Filter filetypes based on input_format
@@ -111,7 +113,7 @@ class AudioConverterApp:
             messagebox.showwarning('No Output Folder', 'Please select an output folder.')
             return
         fmt = self.output_format.get()
-        self.status.config(text='Converting...')
+        self.status.config(text='Converting...', height=6)
         self.progress['value'] = 0
         self.progress['maximum'] = len(self.files)
         self.terminal.config(state='normal')
@@ -132,9 +134,39 @@ class AudioConverterApp:
                 self.root.after(0, self.log_terminal, f"[FAILED]  {os.path.basename(file)}: {e}")
             self.root.after(0, self.progress.step, 1)
             self.root.update()
-        self.status.config(text=f'Conversion complete: {success} succeeded, {failed} failed.')
+        self.status.config(text=f'Conversion complete: {success} succeeded, {failed} failed.', height=6)
+
+import ctypes as ct
+#dark titlebar - ONLY WORKS IN WINDOWS 11!!
+def dark_title_bar(window):
+    """
+    MORE INFO:
+    https://learn.microsoft.com/en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute
+    """
+    window.update()
+    DWMWA_USE_IMMERSIVE_DARK_MODE = 20
+    set_window_attribute = ct.windll.dwmapi.DwmSetWindowAttribute
+    get_parent = ct.windll.user32.GetParent
+    hwnd = get_parent(window.winfo_id())
+    rendering_policy = DWMWA_USE_IMMERSIVE_DARK_MODE
+    value = 2
+    value = ct.c_int(value)
+    set_window_attribute(hwnd, rendering_policy, ct.byref(value), ct.sizeof(value))
+
 
 if __name__ == '__main__':
+
+
     root = tk.Tk()
+
+    dark_title_bar(root)
+
+    #trying to get the taskbar icon to work
+    myappid = 'Excel.File.Parser.V2' # arbitrary string
+    ct.windll.shell32.SetCurrentProcessExplicitAppUserModelID(myappid)
+
+
+    # Theme
+    sv_ttk.set_theme("dark")
     app = AudioConverterApp(root)
     root.mainloop()
