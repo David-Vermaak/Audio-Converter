@@ -1,0 +1,5 @@
+pydub
+sv-ttk
+# Note: ffmpeg must be installed separately and available in your PATH 
+# https://ffmpeg.org/download.html
+# Additionally, you must use Python 3.11 or lower due to changes with the pydub library
