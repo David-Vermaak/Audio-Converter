@@ -1,6 +1,6 @@
 # Bulk Audio Converter
 
-A simple Python GUI app to bulk convert audio files between formats (mp3, wav, ogg, flac) with a progress bar and terminal output.
+A simple Python GUI app to bulk convert audio files between formats (mp3, wav, ogg, flac).
 
 ## Features
 - Multi-select audio files for conversion
