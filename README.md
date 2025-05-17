@@ -46,3 +46,7 @@ pip install pydub
    - Select output folder
    - Click **Convert**
 3. Watch the progress bar and terminal log for results.
+
+
+![image](https://github.com/user-attachments/assets/31e64471-6a14-4b2e-ba8b-c8e8bb9bb5bd)
+
